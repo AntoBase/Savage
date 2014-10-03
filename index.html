@@ -36,10 +36,17 @@
 
 <p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<div>
+	<div class="btn-group" style="border:solid #000 1px;">
+		<button id="svg-editor-add-arrow"		type="button" class="btn btn-default">Add arrow</button>
+		<button id="svg-editor-add-text" 		type="button" class="btn btn-default">Add Text</button>
+		<button id="svg-editor-add-rectangle" 	type="button" class="btn btn-default"><span class="glyphicon glyphicon-vector-path-square"></span> Add rectangle</button>
+		<button id="svg-editor-add-freedraw" 	type="button" class="btn btn-default">Add freedraw</button>
+		<button id="svg-editor-modify" 			type="button" class="btn btn-default">Modify</button>
+	</div>
+	<div id="svg-editor" style="height: 100%;width:100%;border:solid #000 1px;"></div>
+</div> 
+
 
 <p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
 
@@ -84,6 +91,8 @@ $ git checkout gh-pages
             } catch(err) {}
           </script>
 
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+  <script type="text/javascript" src="https://github.com/AntoBase/Savage/blob/master/raphael.savage.js"></script>
 
   </body>
 </html>
