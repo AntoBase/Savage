@@ -49,6 +49,7 @@ Savage.Arrow = function(editor) {
 	this.stopSelector = null;
 	this.resizing = false;
 	this.glow = null;
+	this.selected = false;
 
 	this.path = function() {
 
@@ -91,8 +92,15 @@ Savage.Arrow = function(editor) {
 	this.update = function() {
 		this.raphaelobject.attr({
 			"path": this.path(),
+			'stroke-width': 2,
+			'stroke': this.selected ? Savage.currenSelectedColor : this.color,
 			'fill': this.color
 		});
+
+		if(this.selected)
+			$(this.raphaelobject.node).attr("class", "selectable selected");
+		else
+			$(this.raphaelobject.node).attr("class", "selectable");
 
 		if(this.glow != null)
 			this.glow.remove();
@@ -122,13 +130,10 @@ Savage.Arrow = function(editor) {
 	this.select = function() {
 
 		this.editor.clearSelection();
+		this.selected = true;
 
 		console.log("selected!");
-		this.raphaelobject.attr({
-			'stroke-width': 2,
-			'stroke': '#00ff00',
-			'fill': this.color
-		});
+
 
 		if (this.startSelector != null)
 			this.startSelector.remove();
@@ -144,6 +149,8 @@ Savage.Arrow = function(editor) {
 			'fill': '#fff',
 			'stroke': '#00f'
 		});
+
+		this.update();
 
 		var parent = this;
 		this.startSelector.undrag();
@@ -181,33 +188,26 @@ Savage.Arrow = function(editor) {
 			}
 		);
 
-		$(this.raphaelobject.node).attr("class", "selectable selected");
+		
 	};
 
 	this.unselect = function() {
 		console.log("unselected!");
-		this.raphaelobject.attr({
-			'stroke-width': 2,
-			'stroke': this.color,
-			'fill': this.color
-		});
-
+		this.selected = false;
+		
 		if (this.startSelector != null)
 			this.startSelector.remove();
 		if (this.stopSelector != null)
 			this.stopSelector.remove();
 
-		$(this.raphaelobject.node).attr("class", "selectable");
+		this.update();
 	};
 
 	this.draw = function() {
 
-
 		this.raphaelobject = this.paper.path(this.path());
 
 		this.unselect();
-
-
 
 		var parent = this;
 		this.raphaelobject.click(
@@ -242,11 +242,15 @@ Savage.Arrow = function(editor) {
 
 	this.draw();
 
-
 	this.remove = function() {
+		if (this.startSelector != null)
+			this.startSelector.remove();
+		if (this.stopSelector != null)
+			this.stopSelector.remove();
+		if(this.glow != null)
+			this.glow.remove();
 		this.raphaelobject.remove();
 	}
-
 
 	this.toJSON = function() {
 		return {
