@@ -39,7 +39,7 @@ Savage.Arrow = function(editor) {
 	this.start = new Savage.Point(-10, -10);
 	this.stop = new Savage.Point(-100, -100);
 	this.color = "#ff0000";
-
+	this.editor = editor;
 	this.paper = editor.paper;
 	this.raphaelobject = null;
 	this.startSelector = null;
@@ -102,6 +102,10 @@ Savage.Arrow = function(editor) {
 	};
 
 	this.select = function() {
+
+
+		this.editor.clearSelection();
+
 		console.log("selected!");
 		this.raphaelobject.attr({
 			'stroke-width': 2,
