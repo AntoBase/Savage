@@ -1,49 +1,94 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="description" content="Savage : The Annotating SVG Editor">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/sandstone/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
+        <title>The Savage SVG editor.</title>
 
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Savage : The Annotating SVG Editor">
+        <!-- These are the lines you need to pug to make it work !-->
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <!-- because this makes it work on mobile devices. !-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
+        <!-- Used for theming the buttons !-->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <!-- The raphael package !-->
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
+        <!-- The actual plugin!-->
+        <script type="text/javascript" src="./raphael.savage.js"></script>
+    </head>
+    <body>
+        <div class="container">
 
-    <title>Savage</title>
+            <div>
+                <h1 class="blog-title">The Savage Editor</h1>
+                <p class="lead blog-description">The lightweight svg editor for annotation on mobile and desktop.</p>
+                <hr>
+            </div>
+
+            <h2>Why?</h2>
+            <p>
+                I wanted an easy to use and pluggable image annotator, but I didn't find anything that fitted my needs. So this is my attempt at writing one.<br>
+                <br>
+                This plugin is used in a meteor application, if you want to check out that package, go to: "soon"
+            </p>
+
+            <h2>Demo</h2>
+            Here is a demo:
+            <h3>The Editor:</h3>
+            <div id="savage-editor" style="height: 500px;width:70%;"></div>
+
+            <h3>Getting and loading a JSON representation:</h3>
+            <p>Not working yet, in development.</p>
+
+            <button id='savage-editor-get-json' type='button' class='btn btn-default'>Get JSON</button>
+            <button id='savage-editor-load-json' type='button' class='btn btn-default'>Load JSON</button>
+            <textarea id="savage-editor-json-representation" class="form-control" style="height:400px !important;" rows="3"></textarea>
+            
+
+            <hr>
+            <b>by Batist</b><br>
+            Follow me at <a href="https://twitter.com/batistleman">@batistleman</a>. Or mail me at: batist.leman @gmail.
 
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script type="text/javascript" src="./raphael.savage.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-</head>
 
-<body>
-  <div class="container">
-    <div>
-       <div class="btn-group" style="border:solid #000 1px;">
-          <button id="svg-editor-add-arrow"   type="button" class="btn btn-default">Add arrow</button>
-          <button id="svg-editor-add-text"    type="button" class="btn btn-default">Add Text</button>
-          <button id="svg-editor-add-rectangle"   type="button" class="btn btn-default"><span class="glyphicon glyphicon-vector-path-square"></span> Add rectangle</button>
-          <button id="svg-editor-add-freedraw"  type="button" class="btn btn-default">Add freedraw</button>
-          <button id="svg-editor-modify"      type="button" class="btn btn-default">Modify</button>
-      </div>
-      <div id="svg-editor" style="height: 100%;width:100%;border:solid #000 1px;"></div>
-  </div> 
-</div>
+        </div>
 
-<script type="text/javascript">
-  var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-  try {
-    var pageTracker = _gat._getTracker("UA-2317705-18");
-    pageTracker._trackPageview();
-} catch(err) {}
-</script>
+        <a href="https://github.com/AntoBase/Savage/tree/gh-pages"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 
-</body>
+        <script type="text/javascript">
+            $(function() {
+                $.mobile.loading( 'show', { theme: "b", text: "", textonly: false});
+  
+                var savageEditor = new Savage.Editor("savage-editor");
+
+                $("#savage-editor-get-json").on("click", function(){
+                    var jsonRepresentation = savageEditor.saveToJSON();
+                    $("#savage-editor-json-representation").val(JSON.stringify(jsonRepresentation, null, 4));
+                });
+
+                $("#savage-editor-load-json").on("click", function(){
+                    var jsonRepresentation = $("#savage-editor-json-representation").val();
+
+                    savageEditor.loadFromJSON(jsonRepresentation);
+                });
+
+            });
+        </script>
+        
+        <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script type="text/javascript">
+            try {
+                var pageTracker = _gat._getTracker("UA-2317705-18");
+                pageTracker._trackPageview();
+            } catch(err) {}
+        </script>
+    </body>
 </html>
