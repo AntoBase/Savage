@@ -160,28 +160,6 @@ Savage.Arrow = function(editor) {
 			}
 		);
 
-		this.raphaelobject.undrag();
-		this.raphaelobject.drag(
-			function(dx, dy, x, y, e) {
-				parent.start.x = this.data("startx") + dx;
-				parent.start.y = this.data("starty") + dy;
-				parent.stop.x = this.data("stopx") + dx;
-				parent.stop.y = this.data("stopy") + dy;
-				parent.update();
-			},
-			function(x, y) {
-				this.data("startx", parent.start.x);
-				this.data("starty", parent.start.y);
-				this.data("stopx", parent.stop.x);
-				this.data("stopy", parent.stop.y);
-				Savage.mode = "dragging";
-			},
-			function() {
-				Savage.mode = "none";
-				console.log(Savage.mode);
-			}
-		);
-
 		$(this.raphaelobject.node).attr("class", "selectable selected");
 	};
 
@@ -222,6 +200,28 @@ Savage.Arrow = function(editor) {
 			function() {
 				console.log("raphaelobject on click");
 				parent.select();
+			}
+		);
+
+		this.raphaelobject.undrag();
+		this.raphaelobject.drag(
+			function(dx, dy, x, y, e) {
+				parent.start.x = this.data("startx") + dx;
+				parent.start.y = this.data("starty") + dy;
+				parent.stop.x = this.data("stopx") + dx;
+				parent.stop.y = this.data("stopy") + dy;
+				parent.update();
+			},
+			function(x, y) {
+				this.data("startx", parent.start.x);
+				this.data("starty", parent.start.y);
+				this.data("stopx", parent.stop.x);
+				this.data("stopy", parent.stop.y);
+				Savage.mode = "dragging";
+			},
+			function() {
+				Savage.mode = "none";
+				console.log(Savage.mode);
 			}
 		);
 	};
