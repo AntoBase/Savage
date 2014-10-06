@@ -40,7 +40,7 @@
             <h2>Demo</h2>
             Here is a demo:
             <h3>The Editor:</h3>
-            <div id="savage-editor" style="height: 500px;width:70%;"></div>
+            <div id="savage-editor" style="height: 500px;width:100%;"></div>
 
             <h3>Getting and loading a JSON representation:</h3>
             <p>Not working yet, in development.</p>
@@ -50,11 +50,20 @@
             <textarea id="savage-editor-json-representation" class="form-control" style="height:400px !important;" rows="3"></textarea>
             
 
+            <h2>Roadmap</h2>
+            Things that I will add:
+            <ul>
+                <li>Changing colors</li>
+                <li>Removing object</li>
+                <li>Resizing rectangles</li>
+                <li>Adding images</li>
+                <li>edit freedraw... (if that's even possible...)</li>
+                <li><strike>loading JSON representation</strike></li>
+            </ul>
+
             <hr>
             <b>by Batist</b><br>
             Follow me at <a href="https://twitter.com/batistleman">@batistleman</a>. Or mail me at: batist.leman @gmail.
-
-
 
         </div>
 
@@ -68,14 +77,23 @@
 
                 $("#savage-editor-get-json").on("click", function(){
                     var jsonRepresentation = savageEditor.saveToJSON();
-                    $("#savage-editor-json-representation").val(JSON.stringify(jsonRepresentation, null, 4));
+                    $("#savage-editor-json-representation").val(JSON.stringify(jsonRepresentation/*, null, 4*/));
+
+                    //url specifics
+                    var strJSON = encodeURIComponent(JSON.stringify(jsonRepresentation));
+                    window.location.hash = '#'+strJSON;
                 });
 
                 $("#savage-editor-load-json").on("click", function(){
                     var jsonRepresentation = $("#savage-editor-json-representation").val();
-
+                    savageEditor.clearEditor();
                     savageEditor.loadFromJSON(jsonRepresentation);
                 });
+
+                if(window.location.hash != "")
+                {
+                    savageEditor.loadFromJSON(decodeURIComponent(window.location.hash.substring(1)));
+                }
 
             });
         </script>

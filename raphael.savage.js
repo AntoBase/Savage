@@ -23,6 +23,15 @@ Savage.mode = "none";
 Savage.Point = function(x, y) {
 	this.x = x;
 	this.y = y;
+
+	this.toJSON = function(){
+		return { x: this.x, y: this.y};
+	};
+
+	this.fromJSON = function(json){
+		this.x = json["x"];
+		this.y = json["y"];
+	};
 };
 
 Savage.Arrow = function(editor) {
@@ -208,11 +217,33 @@ Savage.Arrow = function(editor) {
 			color: '#000000'
 		});
 
-		return this.raphaelobject;
+		var parent = this;
+		this.raphaelobject.click(
+			function() {
+				console.log("raphaelobject on click");
+				parent.select();
+			}
+		);
 	};
 
 	this.draw();
 
+
+	this.remove = function(){
+		this.raphaelobject.remove();
+	}
+
+
+	this.toJSON = function(){
+		return { type:"arrow", start: this.start.toJSON(), stop: this.stop.toJSON()};
+	};
+
+	this.fromJSON = function(json){
+		this.start.fromJSON(json["start"]);
+		this.stop.fromJSON(json["stop"]);
+		this.update();
+		return this;
+	};
 
 };
 
@@ -240,7 +271,17 @@ Savage.Rectangle = function(editor) {
 			'stroke': '#ff0000'
 		});
 
-		return this.raphaelobject;
+		var parent = this;
+		this.raphaelobject.click(
+			function() {
+				console.log("raphaelobject on click");
+				parent.select();
+			}
+		);
+	}
+
+	this.remove = function(){
+		this.raphaelobject.remove();
 	}
 
 	this.draw();
@@ -248,6 +289,17 @@ Savage.Rectangle = function(editor) {
 	this.update = function() {
 		this.raphaelobject.attr("path", this.path());
 	}
+
+	this.toJSON = function(){
+		return { type:"rectangle", start: this.start.toJSON(), stop: this.stop.toJSON()};
+	};
+
+	this.fromJSON = function(json){
+		this.start.fromJSON(json["start"]);
+		this.stop.fromJSON(json["stop"]);
+		this.update();
+		return this;
+	};
 };
 
 Savage.FreeDraw = function(editor) {
@@ -274,7 +326,17 @@ Savage.FreeDraw = function(editor) {
 			'stroke': '#ff0000'
 		});
 
-		return this.raphaelobject;
+		var parent = this;
+		this.raphaelobject.click(
+			function() {
+				console.log("raphaelobject on click");
+				parent.select();
+			}
+		);
+	}
+
+	this.remove = function(){
+		this.raphaelobject.remove();
 	}
 
 	this.draw();
@@ -283,6 +345,19 @@ Savage.FreeDraw = function(editor) {
 		this.array[this.array.length] = ["L", this.stop.x, this.stop.y];
 		this.raphaelobject.attr("path", this.path());
 	}
+
+	this.toJSON = function(){
+		return { type:"freedraw",  array: this.array, start: this.start.toJSON(), stop: this.stop.toJSON()};
+	};
+
+	this.fromJSON = function(json){
+		this.start.fromJSON(json["start"]);
+		this.stop = new Savage.Point(0, 0);
+		this.stop.fromJSON(json["stop"]);
+		this.array = JSON.parse(JSON.stringify(json["array"]));
+		this.update();
+		return this;
+	};
 };
 
 Savage.Drawer = function() {
@@ -337,6 +412,7 @@ Savage.Editor = function(editordiv) {
 		//"        <button id='svg-editor-" + this.id + "-add-text' type='button' class='btn btn-default'>Add Text</button>" +
 		"        <button id='svg-editor-" + this.id + "-add-rectangle' type='button' class='btn btn-default'>Add rectangle</button>" +
 		"        <button id='svg-editor-" + this.id + "-add-freedraw' type='button' class='btn btn-default'>Add freedraw</button>" +
+		"        <button id='svg-editor-" + this.id + "-clear' type='button' class='btn btn-default'>Clear</button>" +
 		//"        <button id='svg-editor-" + this.id + "-modify' type='button' class='btn btn-default'>Modify</button>" +
 		"    </div>" +
 		"    <div id='svg-editor-" + this.id + "' style='height: "+($("#"+editordiv).height()-46)+"px;width:100%;border:solid #000 1px;'></div>"
@@ -356,6 +432,7 @@ Savage.Editor = function(editordiv) {
 		drawer.tempObject = new Savage.Arrow(parent);
 		submode = "none"
 	});
+
 	$("#svg-editor-" + this.id + "-add-rectangle").on('click', function() {
 		mode = "add-rectangle";
 		drawer.tempObject = new Savage.Rectangle(parent);
@@ -366,14 +443,20 @@ Savage.Editor = function(editordiv) {
 		mode = "add-text";
 		submode = "none"
 	});
+
 	$("#svg-editor-" + this.id + "-add-freedraw").on('click', function() {
 		mode = "add-freedraw";
 		drawer.tempObject = new Savage.FreeDraw(parent);
 		submode = "none"
 	});
+
 	$("#svg-editor-" + this.id + "-modify").on('click', function() {
 		mode = "modify";
 		submode = "none"
+	});
+
+	$("#svg-editor-" + this.id + "-clear").on('click', function() {
+		parent.clearEditor();
 	});
 
 	// setting the start point
@@ -414,36 +497,18 @@ Savage.Editor = function(editordiv) {
 		if (mode === "add-arrow") {
 			if (drawer.finish(mode === "add-arrow")) {
 				parent.objectList[index] = drawer.tempObject;
-				parent.objectList[index].raphaelobject.click(
-					function() {
-						console.log("raphaelobject on mousedown");
-						parent.objectList[index].select();
-					}
-				);
 			}
 			drawer.tempObject = new Savage.Arrow(parent);
 		}
 		if (mode === "add-rectangle") {
 			if (drawer.finish(mode === "add-rectangle")) {
 				parent.objectList[index] = drawer.tempObject;
-				parent.objectList[index].raphaelobject.click(
-					function() {
-						parent.objectList[index].select();
-					}
-				);
 			}
 			drawer.tempObject = new Savage.Rectangle(parent);
 		}
 		if (mode === "add-freedraw") {
 			if (drawer.finish(mode === "add-freedraw")) {
 				parent.objectList[index] = drawer.tempObject;
-				parent.objectList[index].raphaelobject.click(
-					function(event) {
-						console.log(event);
-						event.stopPropagation();
-						parent.objectList[index].select();
-					}
-				);
 			}
 			drawer.tempObject = new Savage.FreeDraw(parent);
 		}
@@ -451,19 +516,47 @@ Savage.Editor = function(editordiv) {
 
 	this.saveToJSON = function() {
 		var json = {
-			status: "not implemented yet"
+			objects: []
 		};
+
+		this.objectList.forEach(function(element, index, array) {
+			json["objects"].push(element.toJSON());
+		});
+
 		return json;
 	};
 
 	this.loadFromJSON = function(json) {
-		console.log("not implemented yet... All I can give you now is: "+ json);
+		var objects = JSON.parse(json)["objects"];
+
+		var parent = this;
+		objects.forEach(function(element, index, array) {
+			switch(element["type"]){
+				case "arrow":
+					parent.objectList.push((new Savage.Arrow(parent)).fromJSON(element));
+					break;
+				case "rectangle":
+					parent.objectList.push((new Savage.Rectangle(parent)).fromJSON(element));
+					break;
+				case "freedraw":
+					parent.objectList.push((new Savage.FreeDraw(parent)).fromJSON(element));
+					break;
+			}
+		});
 	};
 
 	this.clearSelection = function() {
 		this.objectList.forEach(function(element, index, array) {
 			element.unselect();
 		});
+	};
+
+	this.clearEditor = function() {
+		console.log(parent.objectList);
+		for (var i = 0; i < this.objectList.length; i++) {
+			this.objectList[i].remove();
+		};
+		this.objectList = [];
 	};
 }
 
