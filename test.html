@@ -1,0 +1,213 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script type="text/javascript" src="raphael.free_transform.js"></script>
+<script type="text/javascript" src="spin.min.js"></script>
+
+<style>
+#overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #000;
+    /*opacity: 0.8;
+    filter: alpha(opacity=80);*/
+}
+</style>
+
+<div id="holder" style="height: 100%;"></div>
+
+<script type="text/javascript">
+
+var opts = {
+  lines: 17, // The number of lines to draw
+  length: 17, // The length of each line
+  width: 2, // The line thickness
+  radius: 15, // The radius of the inner circle
+  corners: 0, // Corner roundness (0..1)
+  rotate: 0, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#fff', // #rgb or #rrggbb or array of colors
+  speed: 3.4, // Rounds per second
+  trail: 10, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: '50%', // Top position relative to parent
+  left: '50%' // Left position relative to parent
+};
+//var target = document.getElementById('foo');
+//var spinner = new Spinner(opts).spin(target);
+
+var loading = function() {
+        // add the overlay with loading image to the page
+        var over = '<div id="overlay">' +
+            '<div id="foo"></div>' +
+            '</div>';
+        $(over).appendTo('body');
+		var target = document.getElementById('overlay');
+		var spinner = new Spinner(opts).spin(target);
+};
+
+//loading();
+	
+var stoploading = function() {
+    $('#overlay').remove();
+};
+
+$("html").on("dragover", function(event) {
+    event.preventDefault();  
+    event.stopPropagation();
+    $(this).addClass('dragging');
+});
+
+$("html").on("dragleave", function(event) {
+    event.preventDefault();  
+    event.stopPropagation();
+    $(this).removeClass('dragging');
+});
+
+$("html").on("drop", function(event) {
+	
+    event.preventDefault();  
+    event.stopPropagation();
+	console.log(event);
+	
+	var dt    = event.originalEvent.dataTransfer;
+	var files = dt.files;
+	for (var i=0; i<files.length; i++) {
+		var file = files[i];
+		console.log(file);
+		var reader = new FileReader();
+		loading();
+		reader.onload =  function(event){
+			console.log(event.target.result);
+			
+			var myImg = new Image();
+			myImg.src = event.target.result;
+			
+			var imgurl = resize(myImg);
+			
+			myImg.src = resize(myImg);
+
+			var width = myImg.width;
+			var height = myImg.height;
+
+		   //create the image with the obtained width and height:
+			var image_1 = paper.image(imgurl, 0, 0, width, height);
+			
+			// Add freeTransform
+			var ft1 = paper.freeTransform(image_1);
+			ft1.setOpts({ keepRatio: [ 'axisX', 'axisY'], rotate: [ 'axisX' ], scale: ['axisY'] });
+			
+			stoploading();
+			
+		  }; 
+        reader.readAsDataURL(file);
+	}
+});
+
+function resize(img){
+	var MAX_WIDTH = 800;
+	var MAX_HEIGHT = 600;
+	var width = img.width;
+	var height = img.height;
+	 
+	if (width > height) {
+	  if (width > MAX_WIDTH) {
+		height *= MAX_WIDTH / width;
+		width = MAX_WIDTH;
+	  }
+	} else {
+	  if (height > MAX_HEIGHT) {
+		width *= MAX_HEIGHT / height;
+		height = MAX_HEIGHT;
+	  }
+	}
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var ctx = canvas.getContext("2d");
+	ctx.drawImage(img, 0, 0, width, height);
+	
+	return canvas.toDataURL("image/png");
+}
+
+document.onpaste = function(event){
+  var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+  console.log(JSON.stringify(items)); // will give you the mime types
+  console.log(items[1]);
+  var blob = items[1].getAsFile();
+  var reader = new FileReader();
+  reader.onload = function(event){
+	console.log(event.target.result);
+	
+	var myImg = new Image();
+	myImg.src = event.target.result;
+	
+	var imgurl = resize(myImg);
+	
+	myImg.src = resize(myImg);
+
+	var width = myImg.width;
+	var height = myImg.height;
+
+   //create the image with the obtained width and height:
+    var image_1 = paper.image(imgurl, 0, 0, width, height);
+	
+	image_1.dblclick(function() {
+		console.log("double clicked!");
+		this.toFront();
+	});
+	// Add freeTransform
+    var ft1 = paper.freeTransform(image_1);
+    ft1.setOpts({ keepRatio: [ 'axisX', 'axisY'], rotate: [ 'axisX' ], scale: ['axisY'] });
+	
+	
+	
+  }; 
+  
+  reader.readAsDataURL(blob);
+}
+
+	var w = 500, h=500;
+	var paper = Raphael("holder", "100%", "100%");
+	//paper.setViewBox(0,0,w,h,true);
+	//paper.setSize('100%', '100%');
+
+    var rect = paper
+        .rect(200, 200, 100, 100)
+        .attr('fill', '#fff')
+        ;
+	
+	rect.dblclick(function() {
+		this.toFront();
+	});
+
+    // Add freeTransform
+    var ft = paper.freeTransform(rect);
+
+    // Hide freeTransform handles
+    ft.hideHandles();
+
+    // Show hidden freeTransform handles
+    ft.showHandles();
+
+    // Apply transformations programmatically
+    ft.attrs.rotate = 45;
+
+    ft.apply();
+
+    // Remove freeTransform completely
+    ft.unplug();
+
+    // Add freeTransform with options and callback
+    ft = paper.freeTransform(rect, { keepRatio: true }, function(ft, events) {
+        console.log(ft.attrs);
+    });
+
+    // Change options on the fly
+    ft.setOpts({ keepRatio: [ 'axisX', 'axisY'], rotate: [ 'axisX' ], scale: ['axisY'] });
+</script>
