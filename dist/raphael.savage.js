@@ -173,7 +173,7 @@ Savage.Arrow = function(editor) {
 		this.unselect();
 
 		var parent = this;
-		this.raphaelobject.on("vclick",
+		$(this.raphaelobject.node).on("vclick",
 			function() {
 				console.log("raphaelobject on click");
 				parent.select();
