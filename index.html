@@ -24,9 +24,8 @@
 
             <div style="float:right;">
                 <br>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-via="BatistLeman">Tweet</a>
-                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-                </script>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://labs.antobase.com/Savage/" data-via="BatistLeman">Tweet</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
             </div>
 
             <div>
@@ -36,25 +35,38 @@
             </div>
 
 
+            <h2>Demo Time!</h2>
+            <div id="savage-editor" style="height: 500px;width:100%;"></div>
+            <h3>Getting and loading a JSON representation:</h3>
+            <button id='savage-editor-get-json' type='button' class='btn btn-default'>Get JSON</button>
+            <button id='savage-editor-load-json' type='button' class='btn btn-default'>Load JSON</button>
+            <textarea id="savage-editor-json-representation" class="form-control" style="height:100px !important;" rows="3"></textarea>
+
 
             <h2>Why?</h2>
             <p>
-                I wanted an easy to use and pluggable image annotator, but I didn't find anything that fitted my needs. So this is my attempt at writing one.<br>
-                <br>
-                This plugin is used in a meteor application, if you want to check out that package, go to: "soon"
+                I wanted an easy to use and pluggable image annotator, but I didn't find anything that fitted my needs. So this is my attempt at writing one.
             </p>
 
-            <h2>Demo</h2>
-            Here is a demo:
-            <h3>The Editor:</h3>
-            <div id="savage-editor" style="height: 500px;width:100%;"></div>
 
-            <h3>Getting and loading a JSON representation:</h3>
-            <p>Not working yet, in development.</p>
+            <h2>How to use it?</h2>
+            <p>It sooo simple!</p>
 
-            <button id='savage-editor-get-json' type='button' class='btn btn-default'>Get JSON</button>
-            <button id='savage-editor-load-json' type='button' class='btn btn-default'>Load JSON</button>
-            <textarea id="savage-editor-json-representation" class="form-control" style="height:400px !important;" rows="3"></textarea>
+            <h4>1. Requirements:</h4>
+            <ul>
+                <li>jquery-2.1.1.min.js</li>
+                <li>jquery.mobile-1.4.3.min.js</li>
+                <li>bootstrap-3.2.0.min.js</li>
+                <li>raphael-2.1.0.min.js</li>
+                <li>raphael.free_transform.js</li>
+            </ul>
+
+
+            <h4>2. Write this where you want your editor to be placed:</h4>
+            <script src="https://gist.github.com/Batistleman/7335e7d17ece3a2c9117.js"></script>
+
+            <h4>3. Place this script on your page:</h4>
+            <script src="https://gist.github.com/Batistleman/3ebf2bcf6f4baf877ea3.js"></script>
             
 
             <h2>Roadmap</h2>
