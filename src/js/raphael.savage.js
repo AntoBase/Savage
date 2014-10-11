@@ -109,7 +109,7 @@ Savage.Editor = function(editordiv) {
 
 		console.log(e);
 
-		if (e.which === 1) {
+		if (e.which === 1 || e.which === 0) {
 			console.log(this.id + " on mousedown");
 			console.log(Savage.mode);
 
