@@ -143,7 +143,7 @@ Savage.Rectangle = function(editor) {
 		});
 
 		var parent = this;
-		this.raphaelobject.click(
+		$(this.raphaelobject.node).on("vclick",
 			function() {
 				console.log("raphaelobject on click");
 				parent.select();

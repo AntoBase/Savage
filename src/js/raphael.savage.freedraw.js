@@ -73,7 +73,7 @@ Savage.FreeDraw = function(editor) {
 		this.unselect();
 
 		var parent = this;
-		this.raphaelobject.click(
+		$(this.raphaelobject.node).on("vclick",
 			function() {
 				console.log("freedraw on click");
 				parent.select();

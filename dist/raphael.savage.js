@@ -308,7 +308,7 @@ Savage.Arrow = function(editor) {
 		this.unselect();
 
 		var parent = this;
-		this.raphaelobject.click(
+		$(this.raphaelobject.node).on("vclick",
 			function() {
 				console.log("freedraw on click");
 				parent.select();
@@ -794,7 +794,7 @@ window.Savage = Savage;;Savage.Rectangle = function(editor) {
 		});
 
 		var parent = this;
-		this.raphaelobject.click(
+		$(this.raphaelobject.node).on("vclick",
 			function() {
 				console.log("raphaelobject on click");
 				parent.select();
