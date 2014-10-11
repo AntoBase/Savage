@@ -215,6 +215,7 @@ Savage.Arrow = function(editor) {
 		if(this.glow != null)
 			this.glow.remove();
 		this.raphaelobject.remove();
+		delete this;
 	}
 
 	this.toJSON = function() {

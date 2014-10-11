@@ -1,0 +1,24 @@
+@-webkit-keyframes bluePulse {
+    from { stroke: rgb(0,0,255)     ; }
+    50%  { stroke: rgb(180,180,180) ; }
+    to   { stroke: rgb(0,0,255)     ; }
+}
+
+.selectable {
+	cursor:move;
+}
+
+.selected {
+    -webkit-animation-name: bluePulse;
+    -webkit-animation-duration: 10s;
+    -webkit-animation-iteration-count: infinite;
+}
+
+#overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #000;
+}

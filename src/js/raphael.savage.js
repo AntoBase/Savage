@@ -44,6 +44,9 @@ Savage.Editor = function(editordiv) {
 	this.objectList = new Array();
 	this.id = Savage.uniqueID();
 
+	this.hasFocus = false;
+	this.mouseabove = false;
+
 
 	// Add the buttons and the canvas to the control.
 	$("#" + editordiv).html(
@@ -126,14 +129,50 @@ Savage.Editor = function(editordiv) {
 		}
 	});
 
-	$("#svg-editor-" + this.id).keyup(function(e){
+	$(document).keydown(function(e){
 		console.log(e);
-    	if(e.keyCode == 46 && e.keyCode == 8 ){
-    		this.objectList.forEach(function(element, index, array) {
-				element.remove();
-			});
+    	if(e.keyCode == 46 || e.keyCode == 8 ){
+
+    		for (var i = 0; i < parent.objectList.length; i++) {
+    			if(parent.objectList[i].selected){
+    				parent.objectList[i].remove();
+    				delete parent.objectList[i];
+    			}
+    		};
+
+			parent.objectList = parent.objectList.filter(function(n){ return n != undefined }); // (JS 1.6 and above)
+
+			e.preventDefault();
+			return false;
     	}
 	}) 
+
+	$(document).click(function(e){
+		parent.hasFocus = parent.mouseabove;
+
+		console.log("Has focus = " + parent.hasFocus);
+
+		if(!parent.hasFocus)
+		{
+			parent.clearSelection();
+		}
+	}) 
+
+	$("#svg-editor-" + this.id).on('mouseenter', function(e) {
+		console.log('enter control');
+		parent.mouseabove = true;
+	});
+
+	$("#svg-editor-" + this.id).on('mouseleave', function(e) {
+		console.log('leave control');
+		parent.mouseabove = false;
+	});
+
+		$("#svg-editor-" + this.id).keyup( 
+			function(e) {
+				console.log("svg editor keyup" + e);
+			}
+		);
 
 	// fixate the arrow
 	$("#svg-editor-" + this.id).on('vmouseup', function(e) {
@@ -174,7 +213,6 @@ Savage.Editor = function(editordiv) {
 
 		return json;
 	};
-
 
 	this.loadFromJSON = function(json) {
 		var objects = JSON.parse(json)["objects"];

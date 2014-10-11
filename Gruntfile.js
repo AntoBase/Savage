@@ -6,24 +6,28 @@ module.exports = function(grunt) {
             options: {
                 separator: ';'
             },
-            dist: {
+            dist_js: {
                 src: ['src/**/*.js'],
                 dest: 'dist/<%= pkg.name %>.js'
+            },
+            dist_css: {
+                src: ['src/**/*.css'],
+                dest: 'dist/<%= pkg.name %>.css'
             }
         },
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
             },
-            dist: {
+            dist_js: {
                 files: {
-                    'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+                    'dist/<%= pkg.name %>.min.js': ['<%= concat.dist_js.dest %>']
                 }
             }
         },
         watch: {
             src: {
-                files: ['src/**/*.js'],
+                files: ['src/**/*'],
                 tasks: ['concat', 'uglify']
             }
         }
@@ -33,8 +37,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
 
-    // grunt.registerTask('test', ['jshint', 'qunit']);
-
     grunt.registerTask('default', ['concat', 'uglify']);
-
 };
