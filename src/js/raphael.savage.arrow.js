@@ -151,9 +151,7 @@ Savage.Arrow = function(editor) {
 				Savage.mode = "none";
 				console.log(Savage.mode);
 			}
-		);
-
-		
+		);	
 	};
 
 	this.unselect = function() {

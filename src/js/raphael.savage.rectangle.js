@@ -181,6 +181,7 @@ Savage.Rectangle = function(editor) {
 		if(this.glow != null)
 			this.glow.remove();
 		this.raphaelobject.remove();
+		delete this;
 	}
 
 	this.draw();
