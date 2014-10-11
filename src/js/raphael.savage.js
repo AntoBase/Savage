@@ -107,6 +107,8 @@ Savage.Editor = function(editordiv) {
 		if (Savage.mode === "dragging")
 			return;
 
+		console.log(e);
+
 		if (e.which === 1) {
 			console.log(this.id + " on mousedown");
 			console.log(Savage.mode);
